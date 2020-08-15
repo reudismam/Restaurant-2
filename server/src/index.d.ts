@@ -1,0 +1,1 @@
+declare module 'express-file-store';
