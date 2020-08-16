@@ -12,7 +12,11 @@ export default class UploadController {
     }
 
     post(request: Request, response: Response) {
-        
+        console.log("Reudisamam");
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'application/json');
+        response.json(request.file);
+        //response.end("Reudismam");
     }
 
     delete(request: Request, response: Response) {

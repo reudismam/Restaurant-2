@@ -2,6 +2,7 @@ import express, { request } from 'express';
 import dishRoutes from './routes/dishRouter';
 import commentRoutes from './routes/commentsRouter';
 import userRoutes from './routes/userRoutes';
+import uploadRouter from './routes/uploadRouter';
 import path, { normalize } from 'path';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -43,6 +44,7 @@ app.all('*', (request, response, next) => {
     }
 });
 */
+
 app.use(cors());
 app.use(express.json());
 
@@ -55,6 +57,7 @@ app.use(userRoutes);
 //app.use(auth);
 app.use(dishRoutes);
 app.use(commentRoutes);
+app.use(uploadRouter);
 
 console.log(__dirname)
 

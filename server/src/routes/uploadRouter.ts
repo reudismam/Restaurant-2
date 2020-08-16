@@ -22,11 +22,13 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
     cb(null, true);
 };
 
-const upload = multer ({storage, fileFilter})
+const upload = multer({storage, fileFilter})
 
-routes.route('//uploadImage')
-.post(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.post)
-.get(uploadController.get)
+routes.route('/uploadImage')
+.post(authenticate.verifyUser, authenticate.verifyAdmin, 
+    upload.single('imageFile'), 
+    uploadController.post)
+.get(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.get)
 .put(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.put)
 .delete(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.delete);
 
