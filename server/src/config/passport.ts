@@ -1,6 +1,7 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from '../models/users';
+import {Request, Response, NextFunction} from 'express';
 
 import passportJwt from 'passport-jwt';
 var JwtStrategy = passportJwt.Strategy;
@@ -41,3 +42,10 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts,
     }));
 
 exports.verifyUser = passport.authenticate('jwt', {session: false});
+
+exports.verifyAdmin = function(request: Request, response: Response, next: NextFunction) {
+    if (request.user && request.user.admin) {
+        return next();
+    }
+    return next(new Error('You are not authorized to perform this operation.'));
+}

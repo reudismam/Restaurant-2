@@ -33,6 +33,7 @@ const port = 3333;
 app.set('port', port);
 app.set('secPort', port + 443);
 
+/*
 app.all('*', (request, response, next) => {
     if (request.secure) {
         next();
@@ -41,7 +42,7 @@ app.all('*', (request, response, next) => {
         response.redirect(307, `https://${request.hostname}:${app.get('secPort')}${request.url}`);
     }
 });
-
+*/
 app.use(cors());
 app.use(express.json());
 

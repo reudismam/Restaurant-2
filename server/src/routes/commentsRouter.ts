@@ -5,16 +5,16 @@ const routes = express.Router();
 const commentsController = new CommentsController();
 
 routes.route('/dishes/:dishId/comments')
-.post(authenticate.verifyUser, commentsController.create)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, commentsController.create)
 .get(commentsController.index)
-.put(authenticate.verifyUser, commentsController.update)
-.delete(authenticate.verifyUser, commentsController.delete);
+.put(authenticate.verifyUser, authenticate.verifyAdmin, commentsController.update)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, commentsController.delete);
 
 
 routes.route('/dishes/:dishId/comments/:commentId')
-.post(authenticate.verifyUser, commentsController.createId)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, commentsController.createId)
 .get(commentsController.indexId)
-.put(authenticate.verifyUser, commentsController.updateId)
-.delete(authenticate.verifyUser, commentsController.deleteId);
+.put(authenticate.verifyUser, authenticate.verifyAdmin, commentsController.updateId)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, commentsController.deleteId);
 
 export default routes;

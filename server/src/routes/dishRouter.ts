@@ -6,15 +6,15 @@ const routes = express.Router();
 const dishController = new DishesController();
 
 routes.route('/dishes')
-.post(authenticate.verifyUser, dishController.create)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, dishController.create)
 .get(dishController.index)
-.put(authenticate.verifyUser, dishController.update)
-.delete(authenticate.verifyUser, dishController.delete);
+.put(authenticate.verifyUser, authenticate.verifyAdmin, dishController.update)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, dishController.delete);
 
 routes.route('/dishes/:dishId')
-.post(authenticate.verifyUser, dishController.createId)
+.post(authenticate.verifyUser, authenticate.verifyAdmin, dishController.createId)
 .get(dishController.indexId)
-.put(authenticate.verifyUser, dishController.updateId)
-.delete(authenticate.verifyUser, dishController.deleteId);
+.put(authenticate.verifyUser, authenticate.verifyAdmin, dishController.updateId)
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, dishController.deleteId);
 
 export default routes;
