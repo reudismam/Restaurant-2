@@ -4,6 +4,8 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
+import authenticate from '../config/jwt';
+
 import Dishes from '../models/dishes';
 
 export default class DishController {

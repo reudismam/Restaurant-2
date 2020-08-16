@@ -4,9 +4,11 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
+
+import authenticate = require('../config/passport');
 import Users from '../models/users';
 
-import passport, { Authenticator } from 'passport';
+import passport, { Authenticator} from 'passport';
 
 export default class DishController {
     index(request: Request, response: Response, next: NextFunction) {
@@ -34,9 +36,12 @@ export default class DishController {
     }
 
     login(request: Request, response: Response) {
+        var token = authenticate.getToken({
+            _id: request.user._id
+        });
         response.statusCode = 200;
         response.setHeader('Content-Type', 'application/json');
-        response.json({ success: true, status: 'You are successfully logged in' });
+        response.json({ success: true, token: token, status: 'You are successfully logged in' });
     }
 
     logout(request: Request, response: Response, next: NextFunction) {
