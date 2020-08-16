@@ -11,6 +11,7 @@ export default class DishController {
     index(request: Request, response: Response, next: NextFunction) {
         const dishId = request.params.dishId as string;
         Dishes.findById(dishId)
+        .populate('comments.author')
             .then((dish) => {
                 const target = dish as unknown;
                 const targetDish = target as Dish;
@@ -34,12 +35,17 @@ export default class DishController {
                 const target = dish as unknown;
                 const targetDish = target as Dish;
                 if (dish != null) {
+                    request.body.author = request.user._id;
                     targetDish.comments.push(request.body);
                     dish.save()
                     .then((dish) => {
-                        response.statusCode = 200;
-                        response.setHeader('Content-Type', 'application/json');
-                        response.json(dish);
+                        Dishes.findById(dish._id)
+                        .populate('comments.author')
+                        .then((dish) => {
+                            response.statusCode = 200;
+                            response.setHeader('Content-Type', 'application/json');
+                            response.json(dish);
+                        });
                     }, (err) => next(err));
                 }
                 else {
@@ -85,6 +91,7 @@ export default class DishController {
         const dishId = request.params.dishId as string;
         const commentId = request.params.commentId as string;
         Dishes.findById(dishId)
+        .populate('comments.author')
             .then((dish) => {
                 const target = dish as unknown;
                 const targetDish = target as Dish;
@@ -140,9 +147,13 @@ export default class DishController {
                     }
                     dish.save()
                     .then((dish) => {
-                        response.statusCode = 200;
-                        response.setHeader('Content-Type', 'application/json');
-                        response.json(dish);
+                        Dishes.findById(dish._id)
+                        .populate('comments.author')
+                        .then((dish) => {
+                            response.statusCode = 200;
+                            response.setHeader('Content-Type', 'application/json');
+                            response.json(dish);
+                        })
                     }, (err) => next(err));
                 }
             }, (err) => next(err))
@@ -172,9 +183,13 @@ export default class DishController {
                     targetDish.comments = newComments;
                     dish.save()
                     .then((dish) => {
-                        response.statusCode = 200;
-                        response.setHeader('Content-Type', 'application/json');
-                        response.json(dish);
+                        Dishes.findById(dish._id)
+                        .populate('comments.author')
+                        .then((dish) => {
+                            response.statusCode = 200;
+                            response.setHeader('Content-Type', 'application/json');
+                            response.json(dish);
+                        })
                     }, (err) => next(err));
                 }
             }, (err) => next(err))

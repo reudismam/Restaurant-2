@@ -10,7 +10,9 @@ import Dishes from '../models/dishes';
 
 export default class DishController {
     index(request: Request, response: Response, next: NextFunction) {
+       console.log(`User: ${request.user}`)
        Dishes.find({})
+       .populate('comments.author')
        .then((dishes) => {
             response.statusCode = 200;
             response.setHeader('Content-Type', 'application/json');
@@ -51,6 +53,7 @@ export default class DishController {
     indexId(request: Request, response: Response, next: NextFunction) {
         const dishId = request.params.dishId as string;
         Dishes.findById(dishId)
+        .populate('comments.author')
         .then((dish) => {
             response.statusCode = 200;
             response.setHeader('Content-Type', 'application/json');

@@ -26,10 +26,26 @@ export default class DishController {
                     response.json({ err });
                 }
                 else {
-                    passport.authenticate('local')(request, response, () => {
-                        response.statusCode = 200;
-                        response.setHeader('Content-Type', 'application/json');
-                        response.json({ success: true, status: 'Registration Succesful' });
+                    if (request.body.firstname) {
+                        user.firstname = request.body.firstname;
+                    }
+                    if (request.body.lastname) {
+                        user.lastname = request.body.lastname;
+                    }
+                    user.save((err, user) => {
+                        if (err) {
+                            response.statusCode = 500;
+                            response.setHeader('Content-Type', 'application/json');
+                            response.json({ err });
+                        }
+                        else {
+                            //registering the user
+                            passport.authenticate('local')(request, response, () => {
+                                response.statusCode = 200;
+                                response.setHeader('Content-Type', 'application/json');
+                                response.json({ success: true, status: 'Registration Succesful' });
+                            });
+                        }
                     });
                 }
             });
@@ -60,7 +76,6 @@ export default class DishController {
             return next(err);
         }
     }
-
     home(request: Request, response: Response, next: NextFunction) {
         response.statusCode = 200;
         response.end('Home page');
