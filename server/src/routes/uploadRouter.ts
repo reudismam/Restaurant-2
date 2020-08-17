@@ -1,6 +1,7 @@
-import express, {Request} from 'express';
+import express, {Request, Response} from 'express';
 const authenticate = require('../config/passport');
 import multer, { FileFilterCallback } from 'multer';
+import cors from './cors';
 import UploadController from '../controllers/UploadController';
 const uploadController = new UploadController();
 
@@ -25,11 +26,14 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
 const upload = multer({storage, fileFilter})
 
 routes.route('/uploadImage')
-.post(authenticate.verifyUser, authenticate.verifyAdmin, 
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, 
     upload.single('imageFile'), 
     uploadController.post)
-.get(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.get)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.put)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, uploadController.delete);
+.get(cors.cors, authenticate.verifyUser, authenticate.verifyAdmin, uploadController.get)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, uploadController.put)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, uploadController.delete);
 
 export default routes;

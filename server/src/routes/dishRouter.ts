@@ -1,20 +1,27 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import DishesController from '../controllers/DishesController';
 var authenticate = require('../config/passport');
+import cors from './cors';
 
 const routes = express.Router();
 const dishController = new DishesController();
 
 routes.route('/dishes')
-.post(authenticate.verifyUser, authenticate.verifyAdmin, dishController.create)
-.get(dishController.index)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, dishController.update)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, dishController.delete);
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.get(cors.cors, dishController.index)
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, dishController.create)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, dishController.update)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, dishController.delete);
 
 routes.route('/dishes/:dishId')
-.post(authenticate.verifyUser, authenticate.verifyAdmin, dishController.createId)
-.get(dishController.indexId)
-.put(authenticate.verifyUser, authenticate.verifyAdmin, dishController.updateId)
-.delete(authenticate.verifyUser, authenticate.verifyAdmin, dishController.deleteId);
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.get(cors.cors, dishController.indexId)
+.post(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, dishController.createId)
+.put(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, dishController.updateId)
+.delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, dishController.deleteId);
 
 export default routes;

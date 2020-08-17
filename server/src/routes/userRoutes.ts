@@ -1,25 +1,42 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import UserController from '../controllers/UserController';
 import passport from 'passport';
+import cors from './cors';
 
 
 const routes = express.Router();
 const userController = new UserController();
 
 routes.route('/signup')
-.post(userController.create);
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.post(cors.corsWithOptions, userController.create);
   
 routes.route('/logout')
-.post(userController.logout);
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.post(cors.corsWithOptions, userController.logout);
 
 routes.route('/login')
-.get(userController.login);
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.get(cors.cors, userController.login);
 
 routes.route('/fail')
-.get((request, response) => {
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.get(cors.cors, (request, response) => {
     response.end("Fail");
 });
 
-routes.post('/login', passport.authenticate('local'), userController.login);
+routes.route('/login')
+.options(cors.corsWithOptions, (request: Request, response: Response) => {
+    response.sendStatus(200);
+})
+.post(cors.corsWithOptions, passport.authenticate('local'), userController.login);
 
 export default routes;
