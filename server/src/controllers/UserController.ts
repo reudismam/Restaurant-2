@@ -60,6 +60,15 @@ export default class DishController {
         response.json({ success: true, token: token, status: 'You are successfully logged in' });
     }
 
+    facebookLogin(request: Request, response: Response) {
+        var token = authenticate.getToken({
+            _id: request.user._id
+        });
+        response.statusCode = 200;
+        response.setHeader('Content-Type', 'application/json');
+        response.json({ success: true, token: token, status: 'You are successfully logged in' });
+    }
+
     logout(request: Request, response: Response, next: NextFunction) {
         if (request.user) {
             if (request.session)

@@ -1,5 +1,6 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
+import FacebookTokenStrategy from 'passport-facebook-token';
 import User from '../models/users';
 import {Request, Response, NextFunction} from 'express';
 
@@ -7,8 +8,10 @@ import passportJwt from 'passport-jwt';
 var JwtStrategy = passportJwt.Strategy;
 var ExtractJwt = passportJwt.ExtractJwt;
 
+
 import jwt from 'jsonwebtoken';
 import config from '../config/jwt';
+import { userInfo } from 'os';
 
 exports.local = passport.use(new LocalStrategy(User.authenticate()));
 
@@ -49,3 +52,33 @@ exports.verifyAdmin = function(request: Request, response: Response, next: NextF
     }
     return next(new Error('You are not authorized to perform this operation.'));
 }
+
+exports.facebookPassport = passport.use(new 
+    FacebookTokenStrategy({
+        clientID: config.facebook.clientId,
+        clientSecret: config.facebook.clientSecret
+    }, (acessToken, refleshToken, profile, done) => {
+        User.findOne({facebookId: profile.id}, (err, user) => {
+            if (err) {
+                return done(err, false);
+            }
+            if (!err && user !== null) {
+                return done(null, user);
+            }
+            else {
+                user = new User({userName: profile.displayName});
+                user.facebookId = profile.id;
+                user.firstname = profile.name.givenName;
+                user.lastname = profile.name.familyName;
+                user.save((err, user) => {
+                    if (err) {
+                        return done(err, false);
+                    }
+                    else {
+                        return done(null, user);
+                    }
+                });
+            }
+        });
+    }
+));

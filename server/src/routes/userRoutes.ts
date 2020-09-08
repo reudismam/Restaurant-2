@@ -39,4 +39,6 @@ routes.route('/login')
 })
 .post(cors.corsWithOptions, passport.authenticate('local'), userController.login);
 
+routes.get('/facebook/token', passport.authenticate('facebook-token'), userController.facebookLogin);
+
 export default routes;
